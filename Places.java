@@ -32,7 +32,7 @@ public class Places extends UnicastRemoteObject implements PlaceInterface {
     	String [] cityName = city.split(" ");
     	for (PlaceInfo place : places) {
     		String [] placeName = place.getCity().split(" ");
-    		if (cityName.length < placeName.length) {
+    		if (cityName.length <= placeName.length) {
     			int len = cityName.length;
     			boolean found = true;
 	    		for (int i = 0; i < len; i++) {
