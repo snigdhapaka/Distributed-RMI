@@ -29,23 +29,26 @@ public class Client  {
             PlaceInfo place = places.findPlace(args[2], args[3]);
             
             if(place == null){
-                System.out.println("Place not found");
+                System.out.println("There was a problem with the Place server. No data in places file or it wasn't found");
             } else {
-	            // get closest airports
-	            ArrayList<AirportDistance> near = airport.findAirports(place.getLat(), place.getLon());
-                if(!near.isEmpty()){
-                    place.print();
-    	            for(AirportDistance nearest : near) {
-    	            	nearest.print();
-    	            }
+                if(place.getCity() == null && place.getState() == null){
+                    System.out.println("Place not found");
                 } else {
-                    System.out.println("There was a problem with the Airport server, no data was returned");
+    	            // get closest airports
+    	            ArrayList<AirportDistance> near = airport.findAirports(place.getLat(), place.getLon());
+                    if(!near.isEmpty()){
+                        place.print();
+        	            for(AirportDistance nearest : near) {
+        	            	nearest.print();
+        	            }
+                    } else {
+                        System.out.println("There was a problem with the Airport server, no data was returned");
+                    }
                 }
        		}
 
         } catch(Exception e) {
             System.out.println("There was a problem connecting to the servers");
-            System.out.println("Client exception: " + e);
         }
     }
 }
