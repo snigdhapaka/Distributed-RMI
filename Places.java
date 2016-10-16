@@ -19,10 +19,10 @@ public class Places extends UnicastRemoteObject implements PlaceInterface {
     	try {
     		PlaceList list = PlaceList.parseFrom(new FileInputStream("places-proto.bin"));
             for(Place p : list.getPlaceList()){
-            	places.add(new PlaceInfo(p.getName(), p.getState(), p.getLat(), p.getLon()));
+                places.add(new PlaceInfo(p.getName(), p.getState(), p.getLat(), p.getLon()));
             }
     	} catch (Exception e) {
-    		e.printStackTrace();
+    		System.out.println("Missing places-proto.bin file: " + e);
     	}
 
     	System.out.println("New instance of Places created");
