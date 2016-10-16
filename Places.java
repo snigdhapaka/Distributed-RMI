@@ -46,7 +46,12 @@ public class Places extends UnicastRemoteObject implements PlaceInterface {
 	    		}
     		}
     	}
-    	return null;
+        if(!places.isEmpty()){
+            PlaceInfo place = new PlaceInfo(null, null, -1, -1);
+    	   return place;
+        }
+
+        return null;
     }
 
 }
