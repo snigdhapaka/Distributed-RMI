@@ -1,41 +1,52 @@
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.server.*;
+
 import PlaceData.PlaceDataProto.Place;
 import PlaceData.PlaceDataProto.PlaceList;
+
 import java.io.FileInputStream;
+import java.util.ArrayList;
 
 // this is the class with remote methods
 
-public class Places
-  extends UnicastRemoteObject
-  implements PlaceInterface {
+public class Places extends UnicastRemoteObject implements PlaceInterface {
 
-    private int a;
-    private PlaceTable places;
+    private ArrayList<PlaceInfo> places;
 
-
-    public Places() throws RemoteException {
-	   System.out.println("New instance of Place created");
-	   a = 1;
-
-       places = new PlaceTable();
-       try{
-            PlaceList list = PlaceList.parseFrom(new FileInputStream("places-proto.bin"));
+    public Places () throws RemoteException {
+    	places = new ArrayList<PlaceInfo>();
+    	try {
+    		PlaceList list = PlaceList.parseFrom(new FileInputStream("places-proto.bin"));
             for(Place p : list.getPlaceList()){
-                places.insert(p.getName(), p.getState(), p.getLat(), p.getLon());
-                //System.out.println("state: "+p.getState()+" Place name: "+p.getName()+" lat: "+p.getLat()+" lon: "+p.getLon());
+            	places.add(new PlaceInfo(p.getName(), p.getState(), p.getLat(), p.getLon()));
             }
-            places.printTable();
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
 
-        }
-       catch (Exception e) {
-            System.out.println("Reading places-proto.bin file failed:" + e.getMessage());
-        }
+    	System.out.println("New instance of Places created");
     }
 
-    public PlaceInfo findPlace(String city, String state) throws RemoteException {
-        PlaceInfo placeinfo = places.findPlace(city, state);
-        return placeinfo; 
+    public PlaceInfo findPlace (String city, String state) throws RemoteException {
+    	String [] cityName = city.split(" ");
+    	for (PlaceInfo place : places) {
+    		String [] placeName = place.getCity().split(" ");
+    		if (cityName.length < placeName.length) {
+    			int len = cityName.length;
+    			boolean found = true;
+	    		for (int i = 0; i < len; i++) {
+	    			if (!cityName[i].equalsIgnoreCase(placeName[i])) {
+	    				found = false;
+	    				break;
+	    			}
+	    		}
+	    		if (found && (place.getState()).equalsIgnoreCase(state)) {
+	    			return place;
+	    		}
+    		}
+    	}
+    	return null;
     }
+
 }
