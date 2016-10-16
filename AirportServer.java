@@ -24,7 +24,7 @@ public class AirportServer {
             System.out.println("server " + url + " is running...");
         }
         catch (Exception e) {
-            System.out.println("Sample server failed:" + e.getMessage());
+            System.out.println("Airport server failed:" + e.getMessage());
         }
         
     }
