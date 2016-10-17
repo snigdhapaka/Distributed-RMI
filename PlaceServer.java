@@ -27,10 +27,30 @@ public class PlaceServer {
             System.out.println("binding " + url);
             Naming.rebind(url, new Places());
             System.out.println("server " + url + " is running...");
+            //createPlaceList();
         }
         catch (Exception e) {
-            System.out.println("Place server failed:" + e.getMessage());
+            System.out.println("Sample server failed:" + e.getMessage());
         }
         
     }
+    /*
+    private static void createPlaceList () {
+        ArrayList<PlaceInfo> places = new ArrayList<PlaceInfo>();
+        try {
+            Place place;
+            PlaceList placeList = PlaceList.parseFrom(new FileInputStream("places-proto.bin"));
+            for (Place a : placeList.getPlaceList()) {
+                places.add(new PlaceInfo(a.getName(), a.getState(), a.getLat(), a.getLon()));
+                //System.out.println("state: " + a.getState() + ", name: " + a.getName() + " lat: " + a.getLat() + " lon: " + a.getLon());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Iterator<PlaceInfo> placeIterator = places.iterator();
+        while(placeIterator.hasNext()) {
+            placeIterator.next().print();
+        }
+    }
+    */
 }
