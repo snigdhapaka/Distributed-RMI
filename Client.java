@@ -12,31 +12,51 @@ public class Client  {
                 System.exit(1);
             }
 
-            // get places
-            int port = Integer.parseInt(args[1]);
-            String placesUrl = "//" + args[0] + ":" + port + "/Places";
+            int port = 1099;
+            try{
+                port = Integer.parseInt(args[1]);
+            } catch(NumberFormatException e){
+                System.err.println("usage: java Client -h rmiregistryport -p port city state...");
+                System.out.println("Please enter a number for the port\n");
+                System.exit(1);
+            }
 
-            PlaceInterface places = (PlaceInterface)Naming.lookup(placesUrl);
-            PlaceInfo place = places.findPlace(args[2], args[3]);
+            PlaceInfo place = null;
+
+            try{
+                // get places
+                String placesUrl = "//" + args[0] + ":" + port + "/Places";
+
+                PlaceInterface places = (PlaceInterface)Naming.lookup(placesUrl);
+                place = places.findPlace(args[2], args[3]);
+
+            } catch (FileNotFoundException e) {
+                System.out.println("Server Exception: places-proto.bin not found in Places");
+                System.exit(1);
+            }
 
             if(place == null){
                 System.out.println("Place not found");
             } else {
-                place.print();
 
 	            // get closest airports
-	            String airportsUrl = "//" + args[0] + ":" + port + "/Airports";
-	            AirportInterface airport = (AirportInterface)Naming.lookup(airportsUrl);
-	            ArrayList<AirportDistance> near = airport.findAirports(place.getLat(), place.getLon());
-	            for(AirportDistance nearest : near) {
-	            	nearest.print();
-	            }
+                try{
+    	            String airportsUrl = "//" + args[0] + ":" + port + "/Airports";
+    	            AirportInterface airport = (AirportInterface)Naming.lookup(airportsUrl);
+    	            ArrayList<AirportDistance> near = airport.findAirports(place.getLat(), place.getLon());
+    	            
+                    place.print();
+                    for(AirportDistance nearest : near) {
+                        nearest.print();
+                    }
+                    
+                } catch (FileNotFoundException e) {
+                    System.out.println("Server Exception: airports-proto.bin not found in Airports");
+                    System.exit(1);
+                }
        		}
-
-        } catch (FileNotFoundException e) {
-            System.out.println("Server Exception: File not found");
         } catch(Exception e) {
-            System.out.println("Client exception: " + e);
+            System.out.println("There was a problem connecting to the servers");
         } 
     }
 }
