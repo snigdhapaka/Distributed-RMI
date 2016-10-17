@@ -23,16 +23,18 @@ public class Places extends UnicastRemoteObject implements PlaceInterface {
             	places.add(new PlaceInfo(p.getName(), p.getState(), p.getLat(), p.getLon()));
             }
     	} catch (Exception e) {
-    		e.printStackTrace();
+    		System.out.println("Missing places-proto.bin file: " + e);
     	}
 
     	System.out.println("New instance of Places created");
     }
 
     public PlaceInfo findPlace (String city, String state) throws RemoteException, FileNotFoundException {
-    	if (places.size() == 0) {
+    	
+        if (places.size() == 0) {
             throw new FileNotFoundException();
         }
+
         String [] cityName = city.split(" ");
     	for (PlaceInfo place : places) {
     		String [] placeName = place.getCity().split(" ");
