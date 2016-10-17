@@ -3,11 +3,11 @@ import java.rmi.RemoteException;
 // import java.rmi.RMISecurityManager;
 import java.rmi.server.UnicastRemoteObject;
 
-import java.io.FileInputStream;
+
 import PlaceData.PlaceDataProto.PlaceList;
 import PlaceData.PlaceDataProto.Place;
 import java.util.ArrayList;
-import java.lang.ClassNotFoundException;
+
 
 public class PlaceServer {
     public static void main(String args[]) {
